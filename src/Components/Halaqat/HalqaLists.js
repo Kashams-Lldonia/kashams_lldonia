@@ -1,59 +1,52 @@
 import React from "react";
 import { View, Text, ScrollView, StyleSheet } from "react-native";
 import Halqa from "./Halqa";
-import { getMyList } from "../../Actions/HalqatActions";
+import { getList } from "../../Actions/SharedActions";
 import { strings } from "../../../locales/i18n";
+import EmptyList from "../SharedComponents/EmptyList";
 
 export default class HalqaLists extends React.Component {
-  // static navigationOptions = {
-  //   header: null
-  // };
-
   constructor(props) {
     super(props);
     this.state = {
-      halqat: ""
+      halqat: []
     };
-
+    this.setHalqat = this.setHalqat.bind(this);
     this.renderMyList = this.renderMyList.bind(this);
   }
-
+  setHalqat(resPosts) {
+    this.setState({ halqat: resPosts });
+  }
   componentDidMount() {
-    let tempHalqat = getMyList();
-    if (tempHalqat && tempHalqat.length > 0)
-      this.setState({ halqat: tempHalqat });
+    console.log("HalqaLists");
+
+    getList(this.setHalqat, "halqa/get", {
+      end: 10,
+      amount: 10,
+      flag: false
+    });
   }
 
-  renderMyList = navigate => {
-    // navigate("miniHalqat", { miniHalqat: this.state.miniHalqat })
-    if (this.state.halqat.length > 0)
+  renderMyList = () => {
+    if (this.state.halqat.length)
       return (
-        <View>
+        <ScrollView style={styles.container}>
           {this.state.halqat.map((halqa, index) => (
-            <Halqa halqa={halqa} key={index} navigate={navigate} />
+            <Halqa halqa={halqa} key={index} />
           ))}
-        </View>
+        </ScrollView>
       );
-    else
-      return (
-        <View style={styles.container}>
-          <Text>{strings.HalqaLists.emptyList}</Text>
-        </View>
-      );
+    else return <EmptyList />;
   };
 
   render() {
-    const { navigate } = this.props.navigation;
-    return (
-      <ScrollView style={styles.container}>
-        {this.renderMyList(navigate)}
-      </ScrollView>
-    );
+    return this.renderMyList();
   }
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1
-  }
+  },
+  emptyMsg: {}
 });

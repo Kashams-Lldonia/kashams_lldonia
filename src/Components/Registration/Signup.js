@@ -36,7 +36,7 @@ const keyboardType = Platform.select({
 
 sginupReq = userData => {
   if (userData) {
-    fetch("http://192.168.174.128:3005/user/signup", {
+    fetch("https://kashams-lldonia.herokuapp.com/user/signup", {
       method: "POST",
       headers: {
         Accept: "application/json",
@@ -146,7 +146,7 @@ export default class SignUp extends React.Component {
               underlayColor="blue"
               onPress={() => {
                 console.log(Actions);
-                Actions.testComp();
+                Actions.login();
               }}
             >
               <Text style={{ color: "#009688" }}>
